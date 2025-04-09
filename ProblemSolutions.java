@@ -37,12 +37,29 @@ public class ProblemSolutions {
         int n = values.length;
 
         for (int i = 0; i < n - 1; i++) {
-
-            // YOU CODE GOES HERE -- COMPLETE THE INNER LOOP OF THIS
-            // "SELECTION SORT" ALGORITHM.
-            // DO NOT FORGET TO ADD YOUR NAME / SECTION ABOVE
-
+            // Find the min/max element in the array (unsorted)
+            int index = i;
+            for (int j = i + 1; j < n; j++) {
+                // If its ascending order, find the min
+                if (ascending) {
+                    if (values[j] < values[index]) {
+                        index = j;
+                    }
+                // If its descending order, find the max
+                } else {
+                    if (values[j] > values[index]) {
+                        index = j;
+                    }
+                }
+            }
+            // Swap the max/min element with the first element of unsorted part
+            if (index != i) {
+                int tmp = values[i];
+                values[i] = values[index];
+                values[index] = tmp;
+            }
         }
+    } // End class selectionSort
 
     } // End class selectionSort
 
@@ -153,11 +170,19 @@ public class ProblemSolutions {
      */
 
     public static boolean asteroidsDestroyed(int mass, int[] asteroids) {
-
-        // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT()
-
-        return false;
-
+        // Smallest first
+        Arrays.sort(asteroids);
+        for (int asteroid : asteroids) {
+            if (mass >= asteroid) {
+                // Gain mass
+                mass += asteroid;
+            } else {
+                // Destroy planet
+                return false;
+            }
+        }
+        // All asteroids destroyed
+        return true;
     }
 
 
@@ -191,11 +216,24 @@ public class ProblemSolutions {
      */
 
     public static int numRescueSleds(int[] people, int limit) {
-
-        // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT
-
-        return -1;
-
+        // Pair the lightest and heaviest
+        Arrays.sort(people);
+        int light = 0;
+        int heavy = people.length - 1;
+        int sleds = 0;
+        // Continue until all people are in sleds
+        while (light <= heavy) {
+            // Lightest and heaviest person can share a sled
+            if (people[light] + people[heavy] <= limit) {
+                // pass the lightest
+                light++;
+            }
+            // Heaviest always takes a sled
+            heavy--;
+            // One sled per loop
+            sleds++;
+        }
+        return sleds;
     }
 
 } // End Class ProblemSolutions
