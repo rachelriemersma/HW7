@@ -107,20 +107,87 @@ public class ProblemSolutions {
      * The merging portion of the merge sort, divisible by k first
      */
 
-    private void mergeDivisbleByKFirst(int arr[], int k, int left, int mid, int right)
-    {
-        // YOUR CODE GOES HERE, THIS METHOD IS NO MORE THAN THE STANDARD MERGE PORTION
-        // OF A MERGESORT, EXCEPT THE NUMBERS DIVISIBLE BY K MUST GO FIRST WITHIN THE
-        // SEQUENCE PER THE DISCUSSION IN THE PROLOGUE ABOVE.
-        //
-        // NOTE: YOU CAN PROGRAM THIS WITH A SPACE COMPLEXITY OF O(1) OR O(N LOG N).
-        // AGAIN, THIS IS REFERRING TO SPACE COMPLEXITY. O(1) IS IN-PLACE, O(N LOG N)
-        // ALLOCATES AUXILIARY DATA STRUCTURES (TEMPORARY ARRAYS). IT WILL BE EASIER
-        // TO CODE WITH A SPACE COMPLEXITY OF O(N LOG N), WHICH IS FINE FOR PURPOSES
-        // OF THIS PROGRAMMING EXERCISES.
-
-        return;
-
+    private void mergeDivisbleByKFirst(int arr[], int k, int left, int mid, int right) {
+        // Calculate size of subarrays to be merged
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+        // Create temporary arrays to hold the subarrays during merging
+        int[] tempLeft = new int[n1];
+        int[] tempRight = new int[n2];
+        // Copy the elements into the temporary arrays
+        for (int i = 0; i < n1; i++)
+            tempLeft[i] = arr[left + i];
+        for (int i = 0; i < n2; i++)
+            tempRight[i] = arr[mid + 1 + i];
+        // Create arrays to flag which elements are divisible by k
+        // 0/1 is used to mark divisibility
+        int[] isDivisibleLeft = new int[n1];
+        int[] isDivisibleRight = new int[n2];
+        int divCountLeft = 0, divCountRight = 0;
+        // Mark elements in left subarray as divisible or not divisible
+        for (int i = 0; i < n1; i++) {
+            if (tempLeft[i] % k == 0) {
+                isDivisibleLeft[i] = 1;
+                divCountLeft++;
+            }
+        }
+        // Mark elements in right subarray as divisible or not divisible
+        for (int i = 0; i < n2; i++) {
+            if (tempRight[i] % k == 0) {
+                isDivisibleRight[i] = 1;
+                divCountRight++;
+            }
+        }
+        // Index for filling merged array
+        int i = left;
+        // Add all divisible elements from left subarray - preserve original order
+        for (int j = 0; j < n1; j++) {
+            if (isDivisibleLeft[j] == 1) {
+                arr[i++] = tempLeft[j];
+            }
+        }
+        // Add all divisible elements from right subarray - preserve original order
+        for (int j = 0; j < n2; j++) {
+            if (isDivisibleRight[j] == 1) {
+                arr[i++] = tempRight[j];
+            }
+        }
+        // Handel non-divisible elements, merging in sorted order with arrays
+        int[] nonDivLeft = new int[n1 - divCountLeft];
+        int[] nonDivRight = new int[n2 - divCountRight];
+        int nonDivLeftIndex = 0, nonDivRightIndex = 0;
+        // Extract non-divisible elements from left subarray
+        for (int j = 0; j < n1; j++) {
+            if (isDivisibleLeft[j] == 0) {
+                nonDivLeft[nonDivLeftIndex++] = tempLeft[j];
+            }
+        }
+        // Extract non-divisible elements from right subarray
+        for (int j = 0; j < n2; j++) {
+            if (isDivisibleRight[j] == 0) {
+                nonDivRight[nonDivRightIndex++] = tempRight[j];
+            }
+        }
+        // Sort the non-divisible elements
+        Arrays.sort(nonDivLeft);
+        Arrays.sort(nonDivRight);
+        // Merge non-divisible elements from both subarrays in sorted order
+        int leftIndex = 0, rightIndex = 0;
+        while (leftIndex < nonDivLeftIndex && rightIndex < nonDivRightIndex) {
+            if (nonDivLeft[leftIndex] <= nonDivRight[rightIndex]) {
+                arr[i++] = nonDivLeft[leftIndex++];
+            } else {
+                arr[i++] = nonDivRight[rightIndex++];
+            }
+        }
+        // Copy remaining non-divisible elements from left subarray
+        while (leftIndex < nonDivLeftIndex) {
+            arr[i++] = nonDivLeft[leftIndex++];
+        }
+        // Copy remaining non-divisible elements from right subarray
+        while (rightIndex < nonDivRightIndex) {
+            arr[i++] = nonDivRight[rightIndex++];
+        }
     }
 
 
